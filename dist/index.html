@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#102e3c">
+  <meta name="description" content="在繽紛城市的三跑道換道、跳躍、滑行，沿著食物路線收集六大類營養，挑戰90秒跑酷。">
+  <title>營養衝衝跑 — 城市跑酷 CITY RUN</title>
+  <link rel="stylesheet" href="style.css?v=2.0.2">
+  <link rel="stylesheet" href="camera.css?v=2.0.2">
+  <script src="engine.js?v=2.0.2" defer></script>
+  <script src="core.js?v=2.0.2" defer></script>
+  <script src="pose-core.js?v=2.0.2" defer></script>
+  <script src="game.js?v=2.0.2" defer></script>
+  <script src="camera.js?v=2.0.2" defer></script>
+</head>
+<body>
+<svg class="svg-defs" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><defs>
+  <symbol id="i-leaf" viewBox="0 0 24 24"><path d="M20 4c-9-2-16 2-15 9 1 6 9 7 12 1 2-3 2-6 3-10Z" fill="currentColor"/><path d="m5 20 10-11" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
+  <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M4 12h15m-6-6 6 6-6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="i-pause" viewBox="0 0 24 24"><path d="M8 6v12m8-12v12" stroke="currentColor" stroke-width="3" stroke-linecap="round"/></symbol>
+  <symbol id="i-sound" viewBox="0 0 24 24"><path d="m4 9 4 0 5-4v14l-5-4H4Z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M17 8q6 4 0 8" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></symbol>
+  <symbol id="i-book" viewBox="0 0 24 24"><path d="M12 6v14M3 4q6-1 9 2 3-3 9-2v14q-6-1-9 2-3-3-9-2Z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></symbol>
+  <symbol id="i-expand" viewBox="0 0 24 24"><path d="M9 4H4v5m11-5h5v5M4 15v5h5m11-5v5h-5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+</defs></svg>
+<header class="topbar">
+  <a href="./" class="brand" aria-label="營養衝衝跑首頁"><span class="brand-icon"><svg><use href="#i-leaf"/></svg></span><span><strong>營養衝衝跑<span class="brand-dot">.</span></strong><small>NUTRI RUN / CITY EDITION</small></span></a>
+  <div class="header-right"><span class="prototype"><i></i> CITY RUN 2.0.2</span><button id="camera-btn" class="quiet-btn">◎ <span>攝影機體感</span></button><button id="learn-btn" class="quiet-btn"><svg><use href="#i-book"/></svg><span>營養小教室</span></button><button id="sound-btn" class="icon-btn" aria-label="開啟音效" aria-pressed="false"><svg><use href="#i-sound"/></svg><span class="sound-slash">/</span></button></div>
+</header>
+<main class="page">
+  <div class="page-heading"><div><span class="eyebrow">THREE LANES. ONE GREAT ADVENTURE.</span><h1>下一站，活力城市。</h1></div><p>換道、跳躍、滑行，跑出你的均衡餐盤。</p></div>
+  <div class="app-shell">
+    <section class="game-stage" id="game-stage" aria-label="3D跑酷遊戲" tabindex="0">
+      <canvas id="game-canvas" aria-label="城市三跑道。左右方向鍵換道，空白鍵跳躍，向下方向鍵滑行。"></canvas>
+      <div class="vignette"></div>
+      <div class="hud">
+        <div class="hud-score"><span class="hud-label">營養積分</span><strong id="score">000</strong></div>
+        <div class="hud-progress"><div class="progress-label"><span id="stage-label">準備出發</span><strong><span id="time">90</span><small> 秒</small></strong></div><div class="progress-track"><div id="time-bar"></div></div></div>
+        <div class="hud-life"><span class="hud-label" id="life-label">挑戰機會</span><span id="hearts" aria-label="3次機會">♥ ♥ ♥</span></div>
+        <button id="pause-btn" class="stage-icon" aria-label="暫停遊戲" disabled><svg><use href="#i-pause"/></svg></button>
+      </div>
+      <div class="run-stats"><span class="distance-chip">↗ <strong id="distance">0</strong><small>m</small></span><span class="streak-chip">✦ <strong id="streak">0</strong><small>連續收集</small></span><span id="action-label" class="action-label">跑道 2 · 自動前進</span></div>
+      <div id="food-labels" aria-hidden="true"></div>
+      <div id="feedback" class="feedback" role="status" aria-live="polite"></div>
+      <div id="hit-flash" class="hit-flash"></div>
+      <canvas id="player-cutout" hidden aria-label="玩家身影特效"></canvas>
+      <div id="intro" class="intro">
+        <span class="intro-pill"><span></span> EXPLORE · NUTRI CITY</span>
+        <h2>跑酷城市，<br><span>營養滿分。</span></h2>
+        <p>跟著食物路線，收集六大類營養。<br>看準時機，跳過路障、滑過橫桿！</p>
+        <div class="mode-picker" role="group" aria-label="遊戲模式"><button class="mode active" data-mode="classic" aria-pressed="true"><span>經典挑戰</span><small>90 秒 · 3 次機會</small></button><button class="mode" data-mode="practice" aria-pressed="false"><span>輕鬆練習</span><small>90 秒 · 不扣愛心</small></button></div>
+        <button class="primary start-btn" id="start-btn">開始跑酷<svg><use href="#i-arrow"/></svg></button>
+        <div class="intro-hint"><kbd>←</kbd><kbd>→</kbd> 換跑道 <span>·</span> <kbd>↑</kbd> 跳躍 <span>·</span> <kbd>↓</kbd> 滑行</div>
+      </div>
+      <div id="countdown" class="countdown" hidden aria-live="assertive"><strong>3</strong><span>準備起跑</span></div>
+      <div id="pause-screen" class="screen-overlay" hidden><div class="dialog pause-dialog"><span class="eyebrow">TAKE A BREATH</span><h2>休息一下，再出發。</h2><p>跑道會等你，準備好就繼續！</p><button id="resume-btn" class="primary">繼續跑步 <span>▶</span></button><button id="restart-btn" class="secondary">重新開始</button><button id="menu-btn" class="text-btn">回到主畫面</button></div></div>
+      <div id="result-screen" class="screen-overlay" hidden><div class="dialog result-dialog"><div class="medal">✦</div><span class="eyebrow" id="result-eyebrow">GREAT CHOICES, GREAT RUN!</span><h2 id="result-title">每個好選擇，都值得鼓掌！</h2><div class="result-score"><strong id="final-score">0</strong><span>營養積分</span></div><div class="result-stats"><div><strong id="final-food">0</strong><span>食物收集</span></div><div><strong id="final-dodge">0</strong><span>成功閃避</span></div><div><strong id="final-groups">0/6</strong><span>食物類別</span></div></div><div class="run-result"><span>最長連續收集 <strong id="final-streak">0</strong></span><span>跑步距離 <strong id="final-distance">0</strong> m</span></div><p id="result-tip" class="result-tip"></p><p class="score-note">積分代表遊戲表現，與真實體脂率無關。</p><button id="play-again" class="primary">再跑一次<svg><use href="#i-arrow"/></svg></button><button id="result-menu" class="text-btn">更換模式</button></div></div>
+      <div id="error-screen" class="screen-overlay" hidden><div class="dialog"><h2>暫時無法啟動 3D 畫面</h2><p id="error-text">請使用支援 WebGL 的 Chrome 或 Edge，並開啟瀏覽器硬體加速後重新整理。</p><button class="primary" id="reload-btn">重新整理</button></div></div>
+      <div class="stage-bottom"><span class="location"><i></i> 活力城市 · 三跑道 <span> / </span> 3D</span><button class="stage-icon" id="fullscreen-btn" aria-label="全螢幕"><svg><use href="#i-expand"/></svg></button></div>
+      <div id="touch-controls" class="touch-controls" hidden><div class="direction-pair"><button id="left-btn" aria-label="向左換道">←</button><button id="right-btn" aria-label="向右換道">→</button></div><div class="action-pair"><button id="slide-btn" class="slide-control" aria-label="向下滑行"><span>↓</span> 滑行 <small>S</small></button><button id="jump-btn" class="jump-control" aria-label="向上跳躍"><span>↑</span> 跳躍 <small>SPACE</small></button></div></div>
+    </section>
+    <aside class="sidebar">
+      <button id="pose-status-btn" class="pose-status-btn"><span id="pose-status-dot"></span><span id="pose-status-label">體感未啟用 · 點此設定</span><strong>設定 ↗</strong></button>
+      <section class="collection-panel"><div class="section-top"><span class="mini-label">本次任務</span><span id="collection-count">0 / 6</span></div><h2>收集你的均衡餐盤</h2><p class="subtext">不同類別，一起收集才完整。</p><div id="food-stamps" class="food-stamps">
+        <div class="food-stamp" data-group="grain"><span>🍠</span><strong>全榖雜糧</strong><small>提供能量</small><i>✓</i></div>
+        <div class="food-stamp" data-group="protein"><span>🥚</span><strong>豆魚蛋肉</strong><small>蛋白質來源</small><i>✓</i></div>
+        <div class="food-stamp" data-group="dairy"><span>🥛</span><strong>乳品</strong><small>鈣質來源</small><i>✓</i></div>
+        <div class="food-stamp" data-group="vegetable"><span>🥦</span><strong>蔬菜</strong><small>多樣攝取</small><i>✓</i></div>
+        <div class="food-stamp" data-group="fruit"><span>🍎</span><strong>水果</strong><small>選擇原型</small><i>✓</i></div>
+        <div class="food-stamp" data-group="fat"><span>🥜</span><strong>油脂與堅果</strong><small>適量攝取</small><i>✓</i></div>
+      </div><div class="collection-bonus"><span>✦</span> 集滿六類，額外 <strong>＋50</strong> 分</div></section>
+      <section class="howto"><h3>看懂障礙，跑得更遠</h3>
+        <div class="guide-row"><span class="guide-symbol jump-symbol">↑</span><div><strong>矮路障 · 跳過去</strong><small>空白鍵 / ↑ / 小跳</small></div></div>
+        <div class="guide-row"><span class="guide-symbol slide-symbol">↓</span><div><strong>糖飲橫桿 · 滑過去</strong><small>↓ / S / 蹲下</small></div></div>
+        <div class="guide-row"><span class="guide-symbol lane-symbol">⇄</span><div><strong>點心列車 · 換跑道</strong><small>← → / A D / 左右移動</small></div></div>
+        <p class="small-help">食物 ＋10 · 閃避 ＋5<br>每連續收集 10 個，額外 ＋20 分。<br>手機可四向滑動，P / Esc 暫停。</p></section>
+      <button id="fact-btn" class="fact-card"><span class="fact-icon">✳</span><span><strong>身體也需要脂肪？</strong><small>一起認識體脂肪的工作。</small></span><svg><use href="#i-arrow"/></svg></button>
+      <div class="best-row"><span>個人最佳 <small>本機紀錄</small></span><strong id="best-score">—</strong></div>
+    </aside>
+  </div>
+  <footer class="footer"><span><svg><use href="#i-leaf"/></svg> 好好吃，好好動，一起長出活力。</span><span>CITY RUN <i>·</i> 2.0.2</span></footer>
+</main>
+<dialog id="learn-dialog" class="learn-dialog"><button id="close-learn" class="close-dialog" aria-label="關閉營養小教室">×</button><span class="eyebrow">A LITTLE KNOWLEDGE GOES A LONG WAY</span><h2>營養小教室</h2><p class="learn-intro">認識食物，也認識照顧身體的方法。</p><div class="learn-cards"><article><span>01 / 均衡</span><h3>六大類食物，各有任務</h3><p>全榖雜糧、豆魚蛋肉、乳品、蔬菜、水果、油脂與堅果種子，提供不同營養。遊戲中集章，生活中學習適量、多樣地搭配。</p></article><article><span>02 / 體脂肪</span><h3>脂肪是身體的一份子</h3><p>體脂肪具有儲存能量、保溫及參與身體調節等功能。體脂率是脂肪重量占總體重的比例，健康並非一味追求數字更低。</p></article><article><span>03 / 好習慣</span><h3>照顧身體，是每天的小選擇</h3><p>留意點心與含糖飲料的份量、頻率，搭配均衡飲食、規律活動和充足睡眠。青少年需要足夠營養支持成長。</p></article></div><p class="learn-note">跳躍與積分是遊戲規則；單次吃東西或玩一局遊戲，不能用來推算體脂變化。</p><div class="learn-sources">內容參考：<a href="https://www.hpa.gov.tw/Pages/List.aspx?nodeid=3821" target="_blank" rel="noopener">國健署「我的餐盤」</a><a href="https://ncats.nih.gov/research/research-activities/tissue-chip/meet-chip/fat" target="_blank" rel="noopener">NIH 體脂肪介紹</a><a href="https://www.niddk.nih.gov/health-information/weight-management/take-charge-health-guide-teenagers" target="_blank" rel="noopener">NIDDK 青少年健康</a></div><button id="learn-done" class="primary">知道了，準備出發！</button></dialog>
+<dialog id="camera-dialog" class="camera-dialog"><button id="close-camera" class="close-dialog" aria-label="關閉體感設定">×</button><span class="eyebrow">MOVE YOUR BODY, START YOUR ADVENTURE</span><h2>用身體，控制你的冒險。</h2><p class="camera-intro">左右移動換道 · 小跳觸發跳躍 · 蹲下滑行（空中可加速落地）</p><div class="camera-layout"><div><div class="camera-preview"><video id="pose-video" autoplay playsinline muted hidden></video><canvas id="pose-preview" width="640" height="360" aria-label="鏡像攝影預覽與骨架"></canvas><div id="camera-placeholder">◎<span>啟動攝影機後，讓全身與雙腳都入鏡。</span></div></div><div class="calibration-track"><span id="calibration-bar"></span></div><p id="camera-status" role="status" aria-live="polite">尚未啟動。第一次需要連網載入辨識模型。</p><div class="camera-actions"><button id="enable-camera" class="primary">啟動攝影機</button><button id="calibrate-camera" class="secondary" disabled>站穩 2 秒重新校正</button></div><p id="pose-action" class="pose-action">校正完成後，可先在這裡測試換道、跳躍與蹲下。</p></div><div class="camera-options"><label>使用的攝影機<select id="camera-device"><option value="">預設攝影機</option></select></label><label>最多偵測人數<select id="pose-count"><option value="1">1 人</option><option value="2">2 人</option><option value="3" selected>3 人（鎖定一位玩家）</option></select></label><label class="check-option"><input type="checkbox" id="mirror-camera" checked> 鏡像控制，跟著自己的方向移動</label><label class="check-option"><input type="checkbox" id="show-cutout"> 玩家身影特效（較耗效能）</label><label>跳躍動作幅度 <span id="sensitivity-label">中</span><input id="pose-sensitivity" type="range" min="15" max="38" value="22"><small>小動作即可觸發 ← → 需要更大動作</small></label><div class="offline-box"><strong>準備離線展場</strong><p>先連網下載到這台瀏覽器。顯示完成後，可用同一個網址離線開啟；清除網站資料會移除資源。</p><button id="prepare-offline" class="secondary">下載離線資源</button><span id="offline-status" role="status"></span></div></div></div><p class="camera-note">影像只在這台裝置運算，不上傳、不錄影。請固定遊玩位置、避免逆光，並讓旁觀者離開遊玩區。小跳屬動作推估，不是離地高度量測；改變前後距離時請重新校正。</p><button id="camera-done" class="primary">完成設定，回到遊戲</button></dialog>
+</body>
+</html>
