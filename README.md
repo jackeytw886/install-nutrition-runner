@@ -1,4 +1,19 @@
-# 營養衝衝跑 — 城市 3D 跑酷原型 2.0
+# Nutrition Runner — 營養衝衝跑
+
+<!-- ai-project-management:start -->
+## Project Index — 專案管理索引
+
+- **固定代號：P003**（綁定 GitHub 倉庫 ID 1423197245；不隨排序或改名重排）
+- **分類：互動裝置**；標籤：webgl, camera-control, nutrition-education。
+- **中文用途：營養衝衝跑**。
+- **入口：** `dist/index.html`。
+- **發布狀態：** 未啟用 GitHub Pages；依下方原有說明或入口檔使用。
+- **命名處理：** 已由 T2 改名為 install-nutrition-runner；GitHub 數字 ID 與程式歷史保留。
+- **AI 接手：** 先讀 [AGENTS.md](AGENTS.md)、[HANDOFF.md](HANDOFF.md)、[PROJECT.json](PROJECT.json) 與 [檔案地圖](docs/FILE-MAP.md)。
+- **總目錄：** [AI Project Hub](https://github.com/jackeytw886/ai-project-hub)（私人總目錄，依個別帳號權限讀取）。
+
+本次核對的是倉庫、檔案與文件；執行效果、實體接線及活動年度需由對應驗證紀錄確認。下方保留既有專案說明。
+<!-- ai-project-management:end -->
 
 遊戲場景使用原生 WebGL、JavaScript 和本地生成的低多邊形模型。鍵盤／觸控遊玩不需外部模型。新增的攝影機模式使用 Google MediaPipe Pose Landmarker，首次需要連網取得程式與模型。
 

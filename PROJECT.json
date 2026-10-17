@@ -1,0 +1,36 @@
+{
+  "project_id": "P003",
+  "github_repository_id": 1423197245,
+  "title_en": "Nutrition Runner",
+  "title_zh": "營養衝衝跑",
+  "category": "install",
+  "topics": [
+    "webgl",
+    "camera-control",
+    "nutrition-education"
+  ],
+  "repository_full_name": "jackeytw886/install-nutrition-runner",
+  "repository_url": "https://github.com/jackeytw886/install-nutrition-runner",
+  "default_branch": "main",
+  "visibility": "public",
+  "aliases": [
+    "T2"
+  ],
+  "suggested_name": "install-nutrition-runner",
+  "repository_status": "connected",
+  "content_state": "source-present",
+  "lifecycle": "unknown",
+  "pages_enabled": false,
+  "deployment_url": null,
+  "event_year": null,
+  "entry_paths": [
+    "dist/index.html"
+  ],
+  "related_project_ids": [],
+  "handoff_path": "HANDOFF.md",
+  "verification_source": "github-tree-and-readme",
+  "verified_at": "2026-10-17T20:41:56+08:00",
+  "source_baseline_sha": "e3a836a7255a2d3af74addf1098d78713f9ceac0",
+  "last_runtime_verified_sha": null,
+  "naming_status": "renamed"
+}
